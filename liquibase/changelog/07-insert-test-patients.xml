@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="07-insert-test-patients" author="ant">
+        <!-- Assign patients to groups -->
+        <insert tableName="patient_table">
+            <column name="id" value="1"/>
+            <column name="group_id" value="1"/> <!-- LIGHT group -->
+            <column name="user_id" value="101"/> <!-- Alexei Smirnov -->
+        </insert>
+        
+        <insert tableName="patient_table">
+            <column name="id" value="2"/>
+            <column name="group_id" value="2"/> <!-- MEDIUM group -->
+            <column name="user_id" value="102"/> <!-- Nikolai Kozlov -->
+        </insert>
+        
+        <insert tableName="patient_table">
+            <column name="id" value="3"/>
+            <column name="group_id" value="3"/> <!-- DANGER group -->
+            <column name="user_id" value="103"/> <!-- Pavel Novikov -->
+        </insert>
+    </changeSet>
+</databaseChangeLog>

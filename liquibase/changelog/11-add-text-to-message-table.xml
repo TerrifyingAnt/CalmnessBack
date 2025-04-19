@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="11-add-text-to-message-table" author="ant">
+        <!-- Add text column to message_table -->
+        <addColumn tableName="message_table">
+            <column name="text" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <!-- Update existing messages with some sample text -->
+        <update tableName="message_table">
+            <column name="text" value="Hello Alexei, how are you feeling today? Did you practice the relaxation techniques we discussed?"/>
+            <where>id = 1</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Hi Dr. Petrov. I'm doing better today. I tried the breathing exercises last night and they helped me fall asleep faster."/>
+            <where>id = 2</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="That's excellent progress, Alexei! Let's continue with this practice for the rest of the week and then gradually add the mindfulness exercises we talked about."/>
+            <where>id = 3</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Good afternoon Nikolai, I noticed from your latest report that you're experiencing increased anxiety in public places. Would you like to discuss some strategies for managing this?"/>
+            <where>id = 4</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Yes, doctor. I'm finding it increasingly difficult to go to crowded places. Even going to the supermarket makes me feel on edge and anxious."/>
+            <where>id = 5</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Pavel, I've reviewed your test results and would like to schedule an additional session this week. Are you available on Thursday afternoon?"/>
+            <where>id = 6</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Dr. Ivanova, I had a severe flashback episode last night. I couldn't sleep afterward. Can we talk about this during our next session?"/>
+            <where>id = 7</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

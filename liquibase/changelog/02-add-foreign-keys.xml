@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="02-add-foreign-keys" author="ant">
+        <!-- Add foreign key constraints -->
+        <addForeignKeyConstraint 
+            baseTableName="user_table" 
+            baseColumnNames="type_id" 
+            constraintName="fk_user_type_id" 
+            referencedTableName="user_type" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="user_state" 
+            baseColumnNames="user_id" 
+            constraintName="fk_user_state_user_id" 
+            referencedTableName="user_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="patient_table" 
+            baseColumnNames="user_id" 
+            constraintName="fk_patient_user_id" 
+            referencedTableName="user_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="patient_group_table" 
+            baseColumnNames="group_type_id" 
+            constraintName="fk_group_type_id" 
+            referencedTableName="group_type_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="patient_group_table" 
+            baseColumnNames="psychologist_id" 
+            constraintName="fk_psychologist_id" 
+            referencedTableName="user_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="patient_table" 
+            baseColumnNames="group_id" 
+            constraintName="fk_patient_group_id" 
+            referencedTableName="patient_group_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="user_in_chat_table" 
+            baseColumnNames="user_id" 
+            constraintName="fk_user_in_chat_user_id" 
+            referencedTableName="user_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="user_in_chat_table" 
+            baseColumnNames="chat_id" 
+            constraintName="fk_user_in_chat_chat_id" 
+            referencedTableName="chat_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="message_table" 
+            baseColumnNames="chat_id" 
+            constraintName="fk_message_chat_id" 
+            referencedTableName="chat_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="done_test_table" 
+            baseColumnNames="user_id" 
+            constraintName="fk_done_test_user_id" 
+            referencedTableName="user_table" 
+            referencedColumnNames="id"/>
+            
+        <addForeignKeyConstraint 
+            baseTableName="done_test_table" 
+            baseColumnNames="test_id" 
+            constraintName="fk_done_test_test_id" 
+            referencedTableName="test_table" 
+            referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="04-insert-group-types" author="ant">
+        <insert tableName="group_type_table">
+            <column name="id" value="1"/>
+            <column name="name" value="LIGHT"/>
+            <column name="description" value="For patients with mild mental health concerns"/>
+        </insert>
+        <insert tableName="group_type_table">
+            <column name="id" value="2"/>
+            <column name="name" value="MEDIUM"/>
+            <column name="description" value="For patients with moderate mental health concerns"/>
+        </insert>
+        <insert tableName="group_type_table">
+            <column name="id" value="3"/>
+            <column name="name" value="DANGER"/>
+            <column name="description" value="For patients with severe mental health concerns requiring close monitoring"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

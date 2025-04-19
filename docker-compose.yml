@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      dockerfile: postgres/Dockerfile
+    container_name: gh_postgres
+    environment:
+      POSTGRES_DB: goyda_db
+      POSTGRES_USER: goyda_user
+      POSTGRES_PASSWORD: goyda_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goyda_user -d goyda_db"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  liquibase:
+    container_name: gh_liquibase
+    image: liquibase/liquibase:4.20
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./liquibase:/liquibase/changelog
+    command: >
+      --changeLogFile=master.xml
+      --url=jdbc:postgresql://postgres:5432/goyda_db
+      --username=goyda_user
+      --password=goyda_password
+      update
+
+  keycloak:
+    container_name: gh_keycloak
+    restart: always
+    environment:
+      - KEYCLOAK_ADMIN=goyda_user
+      - KEYCLOAK_ADMIN_PASSWORD=goyda_keycloak
+      - KC_DB=postgres
+      - KEYCLOAK_DB=goyda_db
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/goyda_db
+      - KC_DB_USERNAME=goyda_user
+      - KC_DB_PASSWORD=goyda_password
+    build:
+      dockerfile: keycloak/Dockerfile
+    ports:
+      - "8081:8080"
+      - "8403:8403"
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak/container_data:/opt/jboss/keycloak/imports
+    depends_on:
+      - postgres
+      - liquibase
+      - krakend
+
+
+  krakend:
+    container_name: gh_krakend
+    image: devopsfaith/krakend:latest
+    command: run -d -c /etc/krakend/krakend.json
+    restart: always
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./krakend:/etc/krakend
+
+
+  minio:
+    container_name: gh_minio_storage
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9090"
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    volumes:
+      - ./minio/data:/data
+    environment:
+      - MINIO_SERVER_URL=http://localhost:9000
+      - MINIO_PORT=9000
+      - MINIO_ROOT_USER=gh_user
+      - MINIO_ROOT_PASSWORD=gh_password
+      - MINIO_BASE_STORAGE=gh-main-storage
+      - MINIO_PROXY_HOST=minio
+
+  chat-microservice:
+    build:
+      dockerfile: chat-microservice/Dockerfile
+    container_name: gh_chat
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=goyda_user
+      - POSTGRES_PASSWORD=goyda_password
+      - POSTGRES_DB=goyda_db
+    command: uvicorn main:app --host 0.0.0.0 --reload
+
+
+
+volumes:
+  postgres_data:

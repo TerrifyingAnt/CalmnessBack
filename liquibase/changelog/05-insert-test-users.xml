@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="05-insert-test-users" author="ant">
+        <!-- Insert Psychologists -->
+        <insert tableName="user_table">
+            <column name="id" value="1"/>
+            <column name="name" value="Ivan"/>
+            <column name="surname" value="Petrov"/>
+            <column name="patronymic" value="Sergeevich"/>
+            <column name="age" value="45"/>
+            <column name="description" value="Senior psychologist with 15 years of experience"/>
+            <column name="avatar_path" value="/avatars/ivan_petrov.jpg"/>
+            <column name="login" value="ivan.petrov"/>
+            <column name="password" value="$2a$10$XFKzGVtYGTODfQvbNK2J.eH0YPfQvZbQ3T5Nftft8ZDO.wLHn/QP2"/> <!-- hashed "password123" -->
+            <column name="type_id" value="1"/>
+        </insert>
+        
+        <insert tableName="user_table">
+            <column name="id" value="2"/>
+            <column name="name" value="Maria"/>
+            <column name="surname" value="Ivanova"/>
+            <column name="patronymic" value="Andreevna"/>
+            <column name="age" value="38"/>
+            <column name="description" value="Specialist in PTSD and trauma"/>
+            <column name="avatar_path" value="/avatars/maria_ivanova.jpg"/>
+            <column name="login" value="maria.ivanova"/>
+            <column name="password" value="$2a$10$HmtFT2QAgSL1XDkSqMDI1.3jNxHWWOO1rVpJMH78kR.qWQwZlkV8."/> <!-- hashed "secure456" -->
+            <column name="type_id" value="1"/>
+        </insert>
+        
+        <!-- Insert Patients -->
+        <insert tableName="user_table">
+            <column name="id" value="101"/>
+            <column name="name" value="Alexei"/>
+            <column name="surname" value="Smirnov"/>
+            <column name="patronymic" value="Dmitrievich"/>
+            <column name="age" value="28"/>
+            <column name="description" value="Combat veteran with minor adjustment issues"/>
+            <column name="avatar_path" value="/avatars/alexei_smirnov.jpg"/>
+            <column name="login" value="alexei.smirnov"/>
+            <column name="password" value="$2a$10$5zTlzxhK2XyGFRMBZABx1.RZGJ1VwV5LD5eKhD/zEovCrKyQ9o5na"/> <!-- hashed "patient101" -->
+            <column name="type_id" value="2"/>
+        </insert>
+        
+        <insert tableName="user_table">
+            <column name="id" value="102"/>
+            <column name="name" value="Nikolai"/>
+            <column name="surname" value="Kozlov"/>
+            <column name="patronymic" value="Alexeevich"/>
+            <column name="age" value="32"/>
+            <column name="description" value="Experiencing moderate anxiety and sleep disturbances"/>
+            <column name="avatar_path" value="/avatars/nikolai_kozlov.jpg"/>
+            <column name="login" value="nikolai.kozlov"/>
+            <column name="password" value="$2a$10$p1KngJ5c4QOYjTE3TJ3ECuHRjfKpY8KstZ3A57J.yfRPcX5oRB.Ty"/> <!-- hashed "patient102" -->
+            <column name="type_id" value="2"/>
+        </insert>
+        
+        <insert tableName="user_table">
+            <column name="id" value="103"/>
+            <column name="name" value="Pavel"/>
+            <column name="surname" value="Novikov"/>
+            <column name="patronymic" value="Vladimirovich"/>
+            <column name="age" value="25"/>
+            <column name="description" value="Suffering from severe PTSD with flashbacks"/>
+            <column name="avatar_path" value="/avatars/pavel_novikov.jpg"/>
+            <column name="login" value="pavel.novikov"/>
+            <column name="password" value="$2a$10$LHO5DL1J1fk0E.4nUU.65um8m6lsZwKxAzbNz.5dMoL5HuDtDfVkG"/> <!-- hashed "patient103" -->
+            <column name="type_id" value="2"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

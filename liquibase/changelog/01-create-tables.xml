@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="01-create-tables" author="ant">
+        <!-- Create user_type table -->
+        <createTable tableName="user_type">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create user_table -->
+        <createTable tableName="user_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)"/>
+            <column name="avatar_path" type="varchar(255)"/>
+            <column name="login" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create group_type_table -->
+        <createTable tableName="group_type_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)"/>
+        </createTable>
+
+        <!-- Create patient_group_table -->
+        <createTable tableName="patient_group_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="group_type_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psychologist_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create patient_table -->
+        <createTable tableName="patient_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="group_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create user_state table -->
+        <createTable tableName="user_state">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emotion_state" type="real">
+                <constraints nullable="false"/>
+            </column>
+            <column name="physical_state" type="real">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)"/>
+            <column name="date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reasons" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="solution" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <!-- Add comments to user_state columns -->
+        <setColumnRemarks tableName="user_state" columnName="reasons" remarks="Причины плохого самочувствия составляет ии"/>
+        <setColumnRemarks tableName="user_state" columnName="solution" remarks="Предложение по решению проблемы генерит ии, психолог решает, ок или не ок"/>
+
+        <!-- Create chat_table -->
+        <createTable tableName="chat_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_message_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_status" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create user_in_chat_table -->
+        <createTable tableName="user_in_chat_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="chat_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create message_table -->
+        <createTable tableName="message_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="from_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="media" type="varchar(255)"/>
+            <column name="chat_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create test_table -->
+        <createTable tableName="test_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question_amount" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Create done_test_table -->
+        <createTable tableName="done_test_table">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="test_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="message_table">
+            <column name="text" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <!-- Update existing messages with some sample text -->
+        <update tableName="message_table">
+            <column name="text" value="Hello Alexei, how are you feeling today? Did you practice the relaxation techniques we discussed?"/>
+            <where>id = 1</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Hi Dr. Petrov. I'm doing better today. I tried the breathing exercises last night and they helped me fall asleep faster."/>
+            <where>id = 2</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="That's excellent progress, Alexei! Let's continue with this practice for the rest of the week and then gradually add the mindfulness exercises we talked about."/>
+            <where>id = 3</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Good afternoon Nikolai, I noticed from your latest report that you're experiencing increased anxiety in public places. Would you like to discuss some strategies for managing this?"/>
+            <where>id = 4</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Yes, doctor. I'm finding it increasingly difficult to go to crowded places. Even going to the supermarket makes me feel on edge and anxious."/>
+            <where>id = 5</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Pavel, I've reviewed your test results and would like to schedule an additional session this week. Are you available on Thursday afternoon?"/>
+            <where>id = 6</where>
+        </update>
+        
+        <update tableName="message_table">
+            <column name="text" value="Dr. Ivanova, I had a severe flashback episode last night. I couldn't sleep afterward. Can we talk about this during our next session?"/>
+            <where>id = 7</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

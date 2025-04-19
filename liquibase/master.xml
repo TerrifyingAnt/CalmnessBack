@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Schema creation files -->
+    <include file="changelog/01-create-tables.xml"/>
+    <include file="changelog/02-add-foreign-keys.xml"/>
+    
+    <!-- Test data files -->
+    <include file="changelog/03-insert-user-types.xml"/>
+    <include file="changelog/04-insert-group-types.xml"/>
+    <include file="changelog/05-insert-test-users.xml"/>
+    <include file="changelog/06-insert-test-groups.xml"/>
+    <include file="changelog/07-insert-test-patients.xml"/>
+    <include file="changelog/08-insert-test-tests.xml"/>
+    <include file="changelog/09-insert-test-chats.xml"/>
+    <include file="changelog/10-insert-test-states.xml"/>
+
+    <!-- Schema updates -->
+    <include file="changelog/11-add-text-to-message-table.xml"/>
+    
+</databaseChangeLog>

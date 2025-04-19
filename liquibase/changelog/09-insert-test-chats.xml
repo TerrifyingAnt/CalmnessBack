@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="09-insert-test-chats" author="ant">
+        <!-- Create chats -->
+        <insert tableName="chat_table">
+            <column name="id" value="1"/>
+            <column name="name" value="1"/> <!-- Chat with Alexei -->
+            <column name="last_message_id" value="3"/>
+            <column name="creation_date" value="1649856000"/> <!-- Unix timestamp: 2022-04-13 -->
+            <column name="message_status" value="1"/>
+        </insert>
+        
+        <insert tableName="chat_table">
+            <column name="id" value="2"/>
+            <column name="name" value="2"/> <!-- Chat with Nikolai -->
+            <column name="last_message_id" value="5"/>
+            <column name="creation_date" value="1650460800"/> <!-- Unix timestamp: 2022-04-20 -->
+            <column name="message_status" value="1"/>
+        </insert>
+        
+        <insert tableName="chat_table">
+            <column name="id" value="3"/>
+            <column name="name" value="3"/> <!-- Chat with Pavel -->
+            <column name="last_message_id" value="7"/>
+            <column name="creation_date" value="1651065600"/> <!-- Unix timestamp: 2022-04-27 -->
+            <column name="message_status" value="2"/>
+        </insert>
+        
+        <!-- Associate users with chats -->
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="1"/>
+            <column name="chat_id" value="1"/>
+            <column name="user_id" value="1"/> <!-- Ivan Petrov (psychologist) -->
+        </insert>
+        
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="2"/>
+            <column name="chat_id" value="1"/>
+            <column name="user_id" value="101"/> <!-- Alexei Smirnov (patient) -->
+        </insert>
+        
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="3"/>
+            <column name="chat_id" value="2"/>
+            <column name="user_id" value="1"/> <!-- Ivan Petrov (psychologist) -->
+        </insert>
+        
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="4"/>
+            <column name="chat_id" value="2"/>
+            <column name="user_id" value="102"/> <!-- Nikolai Kozlov (patient) -->
+        </insert>
+        
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="5"/>
+            <column name="chat_id" value="3"/>
+            <column name="user_id" value="2"/> <!-- Maria Ivanova (psychologist) -->
+        </insert>
+        
+        <insert tableName="user_in_chat_table">
+            <column name="id" value="6"/>
+            <column name="chat_id" value="3"/>
+            <column name="user_id" value="103"/> <!-- Pavel Novikov (patient) -->
+        </insert>
+        
+        <!-- Add messages -->
+        <insert tableName="message_table">
+            <column name="id" value="1"/>
+            <column name="from_user_id" value="1"/> <!-- Ivan Petrov -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-13T10:00:00"/>
+            <column name="chat_id" value="1"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="2"/>
+            <column name="from_user_id" value="101"/> <!-- Alexei Smirnov -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-13T10:15:00"/>
+            <column name="chat_id" value="1"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="3"/>
+            <column name="from_user_id" value="1"/> <!-- Ivan Petrov -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-13T10:30:00"/>
+            <column name="chat_id" value="1"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="4"/>
+            <column name="from_user_id" value="1"/> <!-- Ivan Petrov -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-20T14:00:00"/>
+            <column name="chat_id" value="2"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="5"/>
+            <column name="from_user_id" value="102"/> <!-- Nikolai Kozlov -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-20T14:30:00"/>
+            <column name="chat_id" value="2"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="6"/>
+            <column name="from_user_id" value="2"/> <!-- Maria Ivanova -->
+            <column name="status" valueBoolean="true"/>
+            <column name="date" valueDate="2022-04-27T09:00:00"/>
+            <column name="chat_id" value="3"/>
+        </insert>
+        
+        <insert tableName="message_table">
+            <column name="id" value="7"/>
+            <column name="from_user_id" value="103"/> <!-- Pavel Novikov -->
+            <column name="status" valueBoolean="false"/> <!-- Unread message -->
+            <column name="date" valueDate="2022-04-27T11:45:00"/>
+            <column name="chat_id" value="3"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="10-insert-test-states" author="ant">
+        <!-- Create patient states -->
+        <insert tableName="user_state">
+            <column name="id" value="1"/>
+            <column name="user_id" value="101"/> <!-- Alexei Smirnov -->
+            <column name="emotion_state" value="7.5"/> <!-- Scale 1-10 -->
+            <column name="physical_state" value="8.0"/> <!-- Scale 1-10 -->
+            <column name="description" value="Feeling generally positive. Minor sleep disturbances, but manageable."/>
+            <column name="date" valueDate="2022-04-12T08:30:00"/>
+            <column name="reasons" value="Minor sleep disturbances potentially caused by lifestyle factors: late-night use of electronic devices, irregular sleep schedule, and caffeine consumption in the afternoon."/>
+            <column name="solution" value="Implement a consistent sleep schedule, establish a calming bedtime routine, limit screen time 1 hour before bed, avoid caffeine after 2pm, and consider relaxation techniques such as deep breathing or meditation before sleep."/>
+        </insert>
+        
+        <insert tableName="user_state">
+            <column name="id" value="2"/>
+            <column name="user_id" value="102"/> <!-- Nikolai Kozlov -->
+            <column name="emotion_state" value="5.0"/> <!-- Scale 1-10 -->
+            <column name="physical_state" value="6.0"/> <!-- Scale 1-10 -->
+            <column name="description" value="Experiencing increased anxiety, especially in crowded places. Chest tightness and rapid heartbeat during stressful situations."/>
+            <column name="date" valueDate="2022-04-19T16:45:00"/>
+            <column name="reasons" value="Symptoms suggest moderate anxiety disorder potentially triggered by reintegration stress, past trauma, and difficulty adjusting to civilian environments. The physiological symptoms (chest tightness, rapid heartbeat) are classic anxiety responses."/>
+            <column name="solution" value="Implement grounding techniques for acute anxiety episodes; practice progressive muscle relaxation daily; gradually increase exposure to triggering situations with support; maintain a journal of anxiety triggers; consider discussing medication options with psychiatrist; attend weekly group therapy sessions."/>
+        </insert>
+        
+        <insert tableName="user_state">
+            <column name="id" value="3"/>
+            <column name="user_id" value="103"/> <!-- Pavel Novikov -->
+            <column name="emotion_state" value="3.0"/> <!-- Scale 1-10 -->
+            <column name="physical_state" value="4.5"/> <!-- Scale 1-10 -->
+            <column name="description" value="Severe flashbacks and nightmares. Avoiding places that remind me of combat. Feeling constantly on edge and alert for danger. Not sleeping well."/>
+            <column name="date" valueDate="2022-04-26T22:10:00"/>
+            <column name="reasons" value="Clear indicators of severe PTSD including hypervigilance, intrusive memories, avoidance behaviors, and sleep disturbances. The intensity and frequency of symptoms suggest this is significantly impacting daily functioning and quality of life."/>
+            <column name="solution" value="Immediate implementation of trauma-focused cognitive behavioral therapy (TF-CBT); evaluation for appropriate medication by psychiatrist; daily practice of trauma-specific grounding techniques; development of personalized safety plan for flashback episodes; establish consistent sleep routine with nightmare protocol; consider EMDR therapy; weekly individual sessions and twice-weekly group therapy."/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

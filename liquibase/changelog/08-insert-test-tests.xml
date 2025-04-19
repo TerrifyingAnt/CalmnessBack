@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="08-insert-test-tests" author="ant">
+        <!-- Create psychological tests -->
+        <insert tableName="test_table">
+            <column name="id" value="1"/>
+            <column name="name" value="PCL-5"/>
+            <column name="description" value="PTSD Checklist for DSM-5. A 20-item self-report measure that assesses the presence and severity of PTSD symptoms."/>
+            <column name="question_amount" value="20"/>
+        </insert>
+        
+        <insert tableName="test_table">
+            <column name="id" value="2"/>
+            <column name="name" value="PHQ-9"/>
+            <column name="description" value="Patient Health Questionnaire. A 9-item tool used to screen for depression."/>
+            <column name="question_amount" value="9"/>
+        </insert>
+        
+        <insert tableName="test_table">
+            <column name="id" value="3"/>
+            <column name="name" value="GAD-7"/>
+            <column name="description" value="Generalized Anxiety Disorder 7-item scale. Used to screen for anxiety disorders."/>
+            <column name="question_amount" value="7"/>
+        </insert>
+        
+        <!-- Add completed tests for patients -->
+        <insert tableName="done_test_table">
+            <column name="id" value="1"/>
+            <column name="user_id" value="101"/> <!-- Alexei Smirnov -->
+            <column name="test_id" value="1"/> <!-- PCL-5 -->
+        </insert>
+        
+        <insert tableName="done_test_table">
+            <column name="id" value="2"/>
+            <column name="user_id" value="102"/> <!-- Nikolai Kozlov -->
+            <column name="test_id" value="2"/> <!-- PHQ-9 -->
+        </insert>
+        
+        <insert tableName="done_test_table">
+            <column name="id" value="3"/>
+            <column name="user_id" value="102"/> <!-- Nikolai Kozlov -->
+            <column name="test_id" value="3"/> <!-- GAD-7 -->
+        </insert>
+        
+        <insert tableName="done_test_table">
+            <column name="id" value="4"/>
+            <column name="user_id" value="103"/> <!-- Pavel Novikov -->
+            <column name="test_id" value="1"/> <!-- PCL-5 -->
+        </insert>
+        
+        <insert tableName="done_test_table">
+            <column name="id" value="5"/>
+            <column name="user_id" value="103"/> <!-- Pavel Novikov -->
+            <column name="test_id" value="2"/> <!-- PHQ-9 -->
+        </insert>
+    </changeSet>
+</databaseChangeLog>
