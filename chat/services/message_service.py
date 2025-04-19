@@ -1,12 +1,17 @@
 from typing import List, Optional
 from datetime import datetime
+import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
 
 from models.message import Message
 from models.chat import Chat
+from models.user import User
 from schemas.message import MessageCreate, MessageUpdate
+from services.emotion_service import emotion_service
+
+logger = logging.getLogger(__name__)
 
 class MessageService:
     @staticmethod
@@ -35,14 +40,34 @@ class MessageService:
             text=message_create.text,
             status=message_create.status,
             date=datetime.utcnow(),
-            media=None
+            media=None,
+            emotional_state=None,
+            emotion=None
         )
+        
+        try:
+            user_result = await db.execute(
+                select(User).filter(User.id == message_create.from_user_id)
+            )
+            user = user_result.scalars().first()
+            
+            if user and user.type_id == 2:
+                logger.info(f"Анализ эмоций для сообщения от пациента (ID: {user.id})")
+                
+                emotional_state = emotion_service.analyze_sentiment(message_create.text)
+                message.emotional_state = emotional_state
+                
+                emotion = emotion_service.classify_emotion(message_create.text)
+                message.emotion = emotion
+                
+                logger.info(f"Результат анализа: состояние = {emotional_state}, эмоция = {emotion}")
+        except Exception as e:
+            logger.error(f"Ошибка при анализе эмоций: {str(e)}")
         
         db.add(message)
         await db.commit()
         await db.refresh(message)
         
-        # Update last message ID in chat
         await db.execute(
             update(Chat)
             .where(Chat.id == message_create.chat_id)
@@ -61,6 +86,24 @@ class MessageService:
             return None
         
         update_data = message_update.dict(exclude_unset=True)
+        
+        if 'text' in update_data:
+            try:
+                user_result = await db.execute(
+                    select(User).filter(User.id == message.from_user_id)
+                )
+                user = user_result.scalars().first()
+                
+                if user and user.type_id == 2:
+                    logger.info(f"Пересчет эмоций при обновлении сообщения от пациента (ID: {user.id})")
+                    
+                    update_data['emotional_state'] = emotion_service.analyze_sentiment(update_data['text'])
+                    
+                    update_data['emotion'] = emotion_service.classify_emotion(update_data['text'])
+                    
+                    logger.info(f"Результат анализа: состояние = {update_data['emotional_state']}, эмоция = {update_data['emotion']}")
+            except Exception as e:
+                logger.error(f"Ошибка при анализе эмоций при обновлении: {str(e)}")
         
         await db.execute(
             update(Message)

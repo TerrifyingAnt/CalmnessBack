@@ -14,3 +14,6 @@ minio==7.1.15
 python-multipart==0.0.6
 aiofiles==23.1.0
 urllib3
+transformers==4.36.2
+torch==2.1.2
+numpy==1.24.0

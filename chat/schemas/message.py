@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class MessageBase(BaseModel):
     from_user_id: int
@@ -15,6 +15,8 @@ class MessageUpdate(BaseModel):
     text: Optional[str] = None
     media: Optional[str] = None
     status: Optional[bool] = None
+    emotional_state: Optional[float] = None
+    emotion: Optional[str] = None
 
 class FileInfo(BaseModel):
     file_path: str
@@ -26,6 +28,8 @@ class MessageInDB(MessageBase):
     id: int
     date: datetime
     media: Optional[str] = None
+    emotional_state: Optional[float] = Field(None, description="Эмоциональное состояние от -1 (очень плохое) до 1 (очень хорошее)")
+    emotion: Optional[str] = Field(None, description="Эмоция (happiness, sadness, calm, anger и т.д.)")
     
     class Config:
         orm_mode = True
