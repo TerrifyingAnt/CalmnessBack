@@ -85,7 +85,7 @@ services:
       - MINIO_ROOT_USER=gh_user
       - MINIO_ROOT_PASSWORD=gh_password
       - MINIO_BASE_STORAGE=gh-main-storage
-      - MINIO_PROXY_HOST=minio
+      - MINIO_PROXY_HOST=http://10.147.19.91:9000
 
   chat-microservice:
     build:

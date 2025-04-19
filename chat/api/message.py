@@ -2,6 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 import json
+import logging
 
 from core.database import get_db
 from schemas.message import Message, MessageCreate, MessageUpdate
@@ -9,6 +10,7 @@ from services.message_service import MessageService
 from services.minio_service import minio_service
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 @router.get("/chat/{chat_id}", response_model=List[Message])
 async def read_chat_messages(
@@ -22,10 +24,11 @@ async def read_chat_messages(
     """
     messages = await MessageService.get_chat_messages(db, chat_id, skip=skip, limit=limit)
     
-    # Enrich messages with file information
+    # Replace file paths with presigned URLs in the media field
     for message in messages:
         if message.media:
             file_paths = message.media.split(",")
+            presigned_urls = []
             files_data = []
             
             for file_path in file_paths:
@@ -34,7 +37,10 @@ async def read_chat_messages(
                         file_url = minio_service.get_file_url(file_path)
                         file_name = file_path.split("/")[-1] if "/" in file_path else file_path
                         
-                        # Try to determine content type
+                        # Add presigned URL to the list
+                        presigned_urls.append(file_url)
+                        
+                        # Try to determine content type for files info
                         content_type = "application/octet-stream"
                         if "." in file_name:
                             ext = file_name.split(".")[-1].lower()
@@ -53,10 +59,14 @@ async def read_chat_messages(
                             "file_name": file_name,
                             "content_type": content_type
                         })
-                    except Exception:
+                    except Exception as e:
+                        logger.error(f"Error processing file {file_path}: {str(e)}")
                         # Skip files that can't be processed
                         continue
             
+            # Replace media with comma-separated presigned URLs
+            message.media = ",".join(presigned_urls)
+            # Keep files data for backward compatibility
             message.files = files_data
     
     return messages
@@ -83,13 +93,15 @@ async def create_message(
     message = await MessageService.create_message(db, message_create)
     
     # Handle file uploads if any
-    if files and len(files) > 0:
+    if files and any(file.filename for file in files):
         file_paths = []
+        presigned_urls = []
         files_data = []
         
         for file in files:
             if file.filename:
                 try:
+                    logger.info(f"Uploading file {file.filename}")
                     # Upload file to MinIO
                     object_name = await minio_service.upload_file(
                         file, 
@@ -100,20 +112,27 @@ async def create_message(
                     
                     # Get file URL and prepare file info
                     file_url = minio_service.get_file_url(object_name)
+                    presigned_urls.append(file_url)
+                    
                     files_data.append({
                         "file_path": object_name,
                         "file_url": file_url,
                         "file_name": file.filename,
                         "content_type": file.content_type
                     })
+                    logger.info(f"File uploaded successfully: {object_name}")
                 except Exception as e:
+                    logger.error(f"Error uploading file {file.filename}: {str(e)}")
                     # Continue with other files if one fails
                     continue
         
-        # Update message with file paths if files were uploaded
+        # Update message with file paths for database storage
         if file_paths:
             message_update = MessageUpdate(media=",".join(file_paths))
             message = await MessageService.update_message(db, message.id, message_update)
+            
+            # Set presigned URLs in the response media field
+            message.media = ",".join(presigned_urls)
             message.files = files_data
     
     return message
@@ -130,9 +149,10 @@ async def read_message(
     if message is None:
         raise HTTPException(status_code=404, detail="Message not found")
     
-    # Add file information if message has media
+    # Replace file paths with presigned URLs in the media field
     if message.media:
         file_paths = message.media.split(",")
+        presigned_urls = []
         files_data = []
         
         for file_path in file_paths:
@@ -140,6 +160,9 @@ async def read_message(
                 try:
                     file_url = minio_service.get_file_url(file_path)
                     file_name = file_path.split("/")[-1] if "/" in file_path else file_path
+                    
+                    # Add presigned URL to the list
+                    presigned_urls.append(file_url)
                     
                     # Try to determine content type
                     content_type = "application/octet-stream"
@@ -160,10 +183,14 @@ async def read_message(
                         "file_name": file_name,
                         "content_type": content_type
                     })
-                except Exception:
+                except Exception as e:
+                    logger.error(f"Error processing file {file_path}: {str(e)}")
                     # Skip files that can't be processed
                     continue
         
+        # Replace media with comma-separated presigned URLs
+        message.media = ",".join(presigned_urls)
+        # Keep files data for backward compatibility
         message.files = files_data
     
     return message
@@ -192,11 +219,44 @@ async def update_message(
         update_data["status"] = status
     
     # Handle new file uploads if any
-    if files and len(files) > 0:
-        existing_file_paths = message.media.split(",") if message.media else []
-        new_file_paths = []
-        files_data = []
-        
+    existing_file_paths = message.media.split(",") if message.media else []
+    new_file_paths = []
+    files_data = []
+    presigned_urls = []
+    
+    # Process existing files
+    for file_path in existing_file_paths:
+        if file_path.strip():
+            try:
+                file_url = minio_service.get_file_url(file_path)
+                presigned_urls.append(file_url)
+                
+                file_name = file_path.split("/")[-1] if "/" in file_path else file_path
+                content_type = "application/octet-stream"
+                if "." in file_name:
+                    ext = file_name.split(".")[-1].lower()
+                    if ext in ["jpg", "jpeg", "png", "gif"]:
+                        content_type = f"image/{ext}"
+                    elif ext in ["pdf"]:
+                        content_type = "application/pdf"
+                    elif ext in ["doc", "docx"]:
+                        content_type = "application/msword"
+                    elif ext in ["txt"]:
+                        content_type = "text/plain"
+                
+                files_data.append({
+                    "file_path": file_path,
+                    "file_url": file_url,
+                    "file_name": file_name,
+                    "content_type": content_type
+                })
+            except Exception as e:
+                logger.error(f"Error processing existing file {file_path}: {str(e)}")
+                # Skip files that can't be processed
+                continue
+    
+    # Process new files
+    if files and any(file.filename for file in files):
         for file in files:
             if file.filename:
                 try:
@@ -210,58 +270,30 @@ async def update_message(
                     
                     # Get file URL and prepare file info
                     file_url = minio_service.get_file_url(object_name)
+                    presigned_urls.append(file_url)
+                    
                     files_data.append({
                         "file_path": object_name,
                         "file_url": file_url,
                         "file_name": file.filename,
                         "content_type": file.content_type
                     })
-                except Exception:
+                except Exception as e:
+                    logger.error(f"Error uploading new file {file.filename}: {str(e)}")
                     # Continue with other files if one fails
                     continue
-        
-        # Combine existing and new file paths
-        all_file_paths = existing_file_paths + new_file_paths
+    
+    # Combine existing and new file paths
+    all_file_paths = existing_file_paths + new_file_paths
+    if all_file_paths:
         update_data["media"] = ",".join([p for p in all_file_paths if p.strip()])
     
     # Update the message
     message = await MessageService.update_message(db, message_id, MessageUpdate(**update_data))
     
-    # Add file information
-    if message.media:
-        file_paths = message.media.split(",")
-        files_data = []
-        
-        for file_path in file_paths:
-            if file_path.strip():
-                try:
-                    file_url = minio_service.get_file_url(file_path)
-                    file_name = file_path.split("/")[-1] if "/" in file_path else file_path
-                    
-                    # Try to determine content type
-                    content_type = "application/octet-stream"
-                    if "." in file_name:
-                        ext = file_name.split(".")[-1].lower()
-                        if ext in ["jpg", "jpeg", "png", "gif"]:
-                            content_type = f"image/{ext}"
-                        elif ext in ["pdf"]:
-                            content_type = "application/pdf"
-                        elif ext in ["doc", "docx"]:
-                            content_type = "application/msword"
-                        elif ext in ["txt"]:
-                            content_type = "text/plain"
-                    
-                    files_data.append({
-                        "file_path": file_path,
-                        "file_url": file_url,
-                        "file_name": file_name,
-                        "content_type": content_type
-                    })
-                except Exception:
-                    # Skip files that can't be processed
-                    continue
-        
-        message.files = files_data
+    # Set presigned URLs in the response
+    message.media = ",".join(presigned_urls)
+    message.files = files_data
     
     return message
 
@@ -285,7 +317,8 @@ async def delete_message(
             if file_path.strip():
                 try:
                     minio_service.delete_file(file_path)
-                except Exception:
+                except Exception as e:
+                    logger.error(f"Error deleting file {file_path}: {str(e)}")
                     # Continue even if file deletion fails
                     pass
     
@@ -335,15 +368,19 @@ async def delete_message_file(
             message_update = MessageUpdate(media=",".join(updated_paths) if updated_paths else None)
             message = await MessageService.update_message(db, message_id, message_update)
             
-            # Add information about remaining files
+            # Add presigned URLs for remaining files
+            presigned_urls = []
+            files_data = []
+            
             if message.media:
                 remaining_file_paths = message.media.split(",")
-                files_data = []
                 
                 for file_path in remaining_file_paths:
                     if file_path.strip():
                         try:
                             file_url = minio_service.get_file_url(file_path)
+                            presigned_urls.append(file_url)
+                            
                             remaining_file_name = file_path.split("/")[-1] if "/" in file_path else file_path
                             
                             # Try to determine content type
@@ -365,11 +402,14 @@ async def delete_message_file(
                                 "file_name": remaining_file_name,
                                 "content_type": content_type
                             })
-                        except Exception:
+                        except Exception as e:
+                            logger.error(f"Error processing remaining file {file_path}: {str(e)}")
                             # Skip files that can't be processed
                             continue
-                
-                message.files = files_data
+            
+            # Set presigned URLs in the response
+            message.media = ",".join(presigned_urls)
+            message.files = files_data
         else:
             raise HTTPException(status_code=404, detail="File not found in message")
     else:
