@@ -6,12 +6,6 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <changeSet id="11-add-text-to-message-table" author="ant">
-        <!-- Add text column to message_table -->
-        <addColumn tableName="message_table">
-            <column name="text" type="varchar(2000)">
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
         
         <!-- Update existing messages with some sample text -->
         <update tableName="message_table">
