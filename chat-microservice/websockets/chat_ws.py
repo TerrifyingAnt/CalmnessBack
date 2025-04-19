@@ -4,11 +4,11 @@ import asyncio
 from fastapi import WebSocket, WebSocketDisconnect, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.database import AsyncSessionLocal
-from app.websockets.connection_manager import connection_manager
-from app.services.message_service import MessageService
-from app.services.chat_service import ChatService
-from app.schemas.message import MessageCreate, WebSocketMessage
+from core.database import AsyncSessionLocal
+from websockets.connection_manager import connection_manager
+from services.message_service import MessageService
+from services.chat_service import ChatService
+from schemas.message import MessageCreate, WebSocketMessage
 
 async def get_db_for_ws():
     async with AsyncSessionLocal() as session:
