@@ -8,7 +8,7 @@
     <changeSet id="01-create-tables" author="ant">
         <!-- Create user_type table -->
         <createTable tableName="user_type">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -18,7 +18,7 @@
 
         <!-- Create user_table -->
         <createTable tableName="user_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -48,7 +48,7 @@
 
         <!-- Create group_type_table -->
         <createTable tableName="group_type_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -59,7 +59,7 @@
 
         <!-- Create patient_group_table -->
         <createTable tableName="patient_group_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="group_type_id" type="bigint">
@@ -72,7 +72,7 @@
 
         <!-- Create patient_table -->
         <createTable tableName="patient_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="group_id" type="bigint">
@@ -85,7 +85,7 @@
 
         <!-- Create user_state table -->
         <createTable tableName="user_state">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
@@ -115,7 +115,7 @@
 
         <!-- Create chat_table -->
         <createTable tableName="chat_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="bigint">
@@ -134,7 +134,7 @@
 
         <!-- Create user_in_chat_table -->
         <createTable tableName="user_in_chat_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="chat_id" type="bigint">
@@ -147,7 +147,7 @@
 
         <!-- Create message_table -->
         <createTable tableName="message_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="from_user_id" type="bigint">
@@ -167,7 +167,7 @@
 
         <!-- Create test_table -->
         <createTable tableName="test_table">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -182,8 +182,8 @@
         </createTable>
 
         <!-- Create done_test_table -->
-        <createTable tableName="done_test_table">
-            <column name="id" type="bigint">
+        <createTable tableName="done_test_table" >
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_id" type="bigint">
@@ -199,41 +199,6 @@
                 <constraints nullable="true"/>
             </column>
         </addColumn>
-        
-        <!-- Update existing messages with some sample text -->
-        <update tableName="message_table">
-            <column name="text" value="Hello Alexei, how are you feeling today? Did you practice the relaxation techniques we discussed?"/>
-            <where>id = 1</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="Hi Dr. Petrov. I'm doing better today. I tried the breathing exercises last night and they helped me fall asleep faster."/>
-            <where>id = 2</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="That's excellent progress, Alexei! Let's continue with this practice for the rest of the week and then gradually add the mindfulness exercises we talked about."/>
-            <where>id = 3</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="Good afternoon Nikolai, I noticed from your latest report that you're experiencing increased anxiety in public places. Would you like to discuss some strategies for managing this?"/>
-            <where>id = 4</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="Yes, doctor. I'm finding it increasingly difficult to go to crowded places. Even going to the supermarket makes me feel on edge and anxious."/>
-            <where>id = 5</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="Pavel, I've reviewed your test results and would like to schedule an additional session this week. Are you available on Thursday afternoon?"/>
-            <where>id = 6</where>
-        </update>
-        
-        <update tableName="message_table">
-            <column name="text" value="Dr. Ivanova, I had a severe flashback episode last night. I couldn't sleep afterward. Can we talk about this during our next session?"/>
-            <where>id = 7</where>
-        </update>
+    
     </changeSet>
 </databaseChangeLog>

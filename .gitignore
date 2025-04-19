@@ -1,5 +1,4 @@
 postgres/postgres_data
 keycloak/container_data
-chat-microservice/.venv
 minio
 chat/.venv

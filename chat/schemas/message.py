@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 class MessageBase(BaseModel):
@@ -16,6 +16,12 @@ class MessageUpdate(BaseModel):
     media: Optional[str] = None
     status: Optional[bool] = None
 
+class FileInfo(BaseModel):
+    file_path: str
+    file_url: str
+    file_name: str
+    content_type: str
+
 class MessageInDB(MessageBase):
     id: int
     date: datetime
@@ -25,7 +31,7 @@ class MessageInDB(MessageBase):
         orm_mode = True
 
 class Message(MessageInDB):
-    pass
+    files: Optional[List[FileInfo]] = None
 
 class WebSocketMessage(BaseModel):
     type: str  # 'message', 'join', 'leave', etc.
