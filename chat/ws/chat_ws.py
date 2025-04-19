@@ -5,7 +5,7 @@ from fastapi import WebSocket, WebSocketDisconnect, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import AsyncSessionLocal
-from websockets.connection_manager import connection_manager
+from ws.connection_manager import connection_manager
 from services.message_service import MessageService
 from services.chat_service import ChatService
 from schemas.message import MessageCreate, WebSocketMessage

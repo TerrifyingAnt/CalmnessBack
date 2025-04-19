@@ -5,7 +5,7 @@ import logging
 
 from api import api_router
 from core.config import settings
-from websockets.chat_ws import chat_endpoint
+from ws.chat_ws import chat_endpoint
 from core.database import Base, async_engine
 
 # Configure logging

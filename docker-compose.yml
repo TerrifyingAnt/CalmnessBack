@@ -89,7 +89,7 @@ services:
 
   chat-microservice:
     build:
-      dockerfile: chat-microservice/Dockerfile
+      dockerfile: chat/Dockerfile
     container_name: gh_chat
     depends_on:
       liquibase:

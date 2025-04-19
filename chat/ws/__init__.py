@@ -1,0 +1,1 @@
+from websockets.datastructures import Headers
