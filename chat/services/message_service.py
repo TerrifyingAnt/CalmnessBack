@@ -40,29 +40,22 @@ class MessageService:
             text=message_create.text,
             status=message_create.status,
             date=datetime.utcnow(),
-            media=None,
-            emotional_state=None,
-            emotion=None
+            media=None
         )
         
+        # Для любого типа пользователя делаем анализ эмоций текста
         try:
-            user_result = await db.execute(
-                select(User).filter(User.id == message_create.from_user_id)
-            )
-            user = user_result.scalars().first()
+            logger.info(f"Анализ эмоций для сообщения от пользователя (ID: {message_create.from_user_id})")
             
-            if user and user.type_id == 2:
-                logger.info(f"Анализ эмоций для сообщения от пациента (ID: {user.id})")
-                
-                emotional_state = emotion_service.analyze_sentiment(message_create.text)
-                message.emotional_state = emotional_state
-                
-                emotion = emotion_service.classify_emotion(message_create.text)
-                message.emotion = emotion
-                
-                logger.info(f"Результат анализа: состояние = {emotional_state}, эмоция = {emotion}")
+            emotional_state = emotion_service.analyze_sentiment(message_create.text)
+            message.emotional_state = emotional_state
+            
+            emotion = emotion_service.classify_emotion(message_create.text)
+            message.emotion = emotion
+            
+            logger.info(f"Результат анализа текста: состояние = {emotional_state}, эмоция = {emotion}")
         except Exception as e:
-            logger.error(f"Ошибка при анализе эмоций: {str(e)}")
+            logger.error(f"Ошибка при анализе эмоций текста: {str(e)}")
         
         db.add(message)
         await db.commit()
