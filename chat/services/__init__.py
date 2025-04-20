@@ -1,2 +1,3 @@
 from services.chat_service import ChatService
 from services.message_service import MessageService
+from services.emotion_service import emotion_service

@@ -21,5 +21,6 @@
 
     <!-- Schema updates -->
     <include file="changelog/11-add-text-to-message-table.xml"/>
+    <include file="changelog/11-add-emotion-fields.xml"/>
     
 </databaseChangeLog>

@@ -13,3 +13,16 @@ setuptools
 minio==7.1.15
 python-multipart==0.0.6
 aiofiles==23.1.0
+urllib3
+transformers
+torch
+numpy
+librosa
+
+sentencepiece
+
+# Voice emotion analysis
+soundfile
+
+# Logging and monitoring
+python-json-logger
